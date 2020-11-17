@@ -17,7 +17,7 @@ mod test {
 
     #[test]
     fn test() {
-        let b = guid! {"72631e54-78a4-11d0-bcf7-00aa00b7b32a"};
+        let b = guid! {72631e54-78a4-11d0-bcf7-00aa00b7b32a};
         println!("{:#?}", b);
     }
 }
