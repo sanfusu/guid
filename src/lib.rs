@@ -1,13 +1,13 @@
 //! # Example
 //! ```
 //! use guid::*;
+//! use guid_proc::guid;
+//! use guid_proc::Guid;
 //!
 //! #[guid(72631e54-78a4-11d0-bcf7-00aa00b7b32a)]
 //! struct Protocol;
 //! assert_eq!(Protocol::guid(), Guid!("72631e54-78a4-11d0-bcf7-00aa00b7b32a"));
 //! ```
-
-extern crate guid_proc;
 
 /// 全局唯一标识符 (RFC 4122)
 #[derive(Debug, PartialEq, Eq)]
@@ -26,16 +26,11 @@ pub struct Guid {
     pub data4: [u8; 8],
 }
 
-#[macro_export]
-macro_rules! Guid {
-    ($t:literal) => {
-        guid_proc! {$t}
-    };
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
+    use guid_proc::Guid;
+    use guid_proc::guid;
     #[guid(72631e54-78a4-11d0-bcf7-00aa00b7b32a)]
     struct A;
     #[test]
