@@ -8,7 +8,4 @@ edition = "2018"
 [lib]
 
 [dependencies]
-guid_proc = { version = "0.1", path = "./proc" }
-
-[workspace]
-members=['./proc']
+guid_proc = { git="https://github.com/sanfusu/guid_proc"}

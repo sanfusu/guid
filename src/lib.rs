@@ -1,8 +1,17 @@
+//! # Example
+//! ```
+//! use guid::*;
+//!
+//! #[guid(72631e54-78a4-11d0-bcf7-00aa00b7b32a)]
+//! struct Protocol;
+//! assert_eq!(Protocol::guid(), Guid!("72631e54-78a4-11d0-bcf7-00aa00b7b32a"));
+//! ```
+
+#[macro_use]
 extern crate guid_proc;
-pub use guid_proc::*;
 
 /// 全局唯一标识符 (RFC 4122)
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 #[repr(C)]
 pub struct Guid {
     /// TimeLow: 时间戳的低字段
@@ -18,14 +27,21 @@ pub struct Guid {
     pub data4: [u8; 8],
 }
 
+#[macro_export]
+macro_rules! Guid {
+    ($t:literal) => {
+        guid_proc! {$t}
+    };
+}
+
 #[cfg(test)]
 mod test {
-    use super::Guid;
-    use guid_proc::guid;
-    
+    use super::*;
+    #[guid(72631e54-78a4-11d0-bcf7-00aa00b7b32a)]
+    struct A;
     #[test]
     fn test() {
-        let b = guid! {72631e54-78a4-11d0-bcf7-00aa00b7b32a};
-        println!("{:#?}", b);
+        let b = Guid! {"72631e54-78a4-11d0-bcf7-00aa00b7b32a"};
+        assert_eq!(A::guid(), b);
     }
 }
