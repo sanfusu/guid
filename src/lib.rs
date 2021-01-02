@@ -1,14 +1,3 @@
-//! # Example
-//! ```
-//! use guid::*;
-//! use guid_proc::guid;
-//! use guid_proc::Guid;
-//!
-//! #[guid(72631e54-78a4-11d0-bcf7-00aa00b7b32a)]
-//! struct Protocol;
-//! assert_eq!(Protocol::guid(), Guid!("72631e54-78a4-11d0-bcf7-00aa00b7b32a"));
-//! ```
-
 /// 全局唯一标识符 (RFC 4122)
 #[derive(Debug, PartialEq, Eq)]
 #[repr(C)]
@@ -24,18 +13,4 @@ pub struct Guid {
     /// 剩余 6 个字节为唯一的节点标识，
     /// 可以是 IEEE 802 地址，或者用于加密的随机数。
     pub data4: [u8; 8],
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-    use guid_proc::Guid;
-    use guid_proc::guid;
-    #[guid(72631e54-78a4-11d0-bcf7-00aa00b7b32a)]
-    struct A;
-    #[test]
-    fn test() {
-        let b = Guid! {"72631e54-78a4-11d0-bcf7-00aa00b7b32a"};
-        assert_eq!(A::guid(), b);
-    }
 }
