@@ -8,4 +8,7 @@ edition = "2018"
 [lib]
 
 [dependencies]
-guid_proc = { git="https://github.com/sanfusu/guid_proc"}
+guid_proc = { git = "https://github.com/sanfusu/guid_proc" }
+syn = "1.0"
+pest = "2.1"
+pest_derive = "2.1"
