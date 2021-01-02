@@ -70,10 +70,8 @@ impl std::convert::From<String> for Guid {
     }
 }
 
-impl syn::parse::Parser for Guid {
-    type Output = Self;
-    
-    fn parse2(self, tokens: syn::export::TokenStream2) -> syn::Result<Self::Output> {
-        Ok(tokens.to_string().into())
+impl syn::parse::Parse for Guid {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        Ok(input.to_string().into())
     }
 }
