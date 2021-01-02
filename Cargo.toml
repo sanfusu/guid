@@ -9,6 +9,5 @@ edition = "2018"
 
 [dependencies]
 syn = "1.0"
-pest = "2.1"
-pest_derive = "2.1"
 quote = "1.0"
+layout = { git = "https://github.com/sanfusu/layout" }
