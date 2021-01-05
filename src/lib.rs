@@ -101,7 +101,7 @@ impl std::str::FromStr for Guid {
 }
 
 #[derive(Debug)]
-enum ParseGuidErrorKind {
+pub enum ParseGuidErrorKind {
     ParseIntError(ParseIntError),
     TryFromSliceError(TryFromSliceError),
     InvalidLenError,
@@ -117,7 +117,7 @@ impl Display for ParseGuidErrorKind {
                 write!(f, "{}", x)
             }
             ParseGuidErrorKind::InvalidLenError => {
-                write!(f, "Invalid Len")
+                write!(f, "Invalid Length")
             }
         }
     }
@@ -130,7 +130,7 @@ pub struct ParseGuidError {
 
 impl Display for ParseGuidError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Error: {}", self.source)
+        write!(f, "Error while parsing Guid string: {}", self.source)
     }
 }
 
@@ -163,6 +163,9 @@ impl ParseGuidError {
             source: ParseGuidErrorKind::TryFromSliceError(x),
         }
     }
+    pub fn kind(&self) -> &ParseGuidErrorKind {
+        &self.source
+    }
 }
 
 #[cfg(test)]
@@ -180,5 +183,25 @@ mod test {
                 data4: [0x09, 0x0a, 0x0b, 0x0d, 0x0e, 0x0f, 0x10, 0x11],
             },
         );
+        let guid = " 1020304-0506-0708-090a-0b0d0e0f1011"
+            .parse::<Guid>()
+            .expect_err("It should be error:Invalid length");
+
+        match guid.kind() {
+            ParseGuidErrorKind::InvalidLenError => {}
+            _ => {
+                panic!("It should be error:Invalid length")
+            }
+        }
+
+        let guid = "01020304-0x06-0708-090a-0b0d0e0f1011"
+            .parse::<Guid>()
+            .expect_err("It should be parse int error");
+        match guid.kind() {
+            ParseGuidErrorKind::ParseIntError(_) => {}
+            _ => {
+                panic!("It should be parse int error")
+            }
+        }
     }
 }
