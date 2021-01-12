@@ -10,6 +10,6 @@ edition = "2018"
 [dependencies]
 syn = "1.0"
 quote = "1.0"
-layout = { path = "layout" }
+layout = { git = " git@github.com:sanfusu/layout" }
 
 [workspace]
