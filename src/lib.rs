@@ -43,24 +43,6 @@ impl std::convert::TryFrom<String> for Guid {
     }
 }
 
-impl quote::ToTokens for Guid {
-    fn to_tokens(&self, tokens: &mut quote::__private::TokenStream) {
-        let data1 = self.data1;
-        let data2 = self.data2;
-        let data3 = self.data3;
-        let data4 = self.data4;
-        let out = quote::quote! {
-            guid::Guid {
-                data1:#data1,
-                data2:#data2,
-                data3:#data3,
-                data4: [#(#data4,)*]
-            }
-        };
-        *tokens = out;
-    }
-}
-
 impl std::str::FromStr for Guid {
     type Err = ParseGuidError;
 
