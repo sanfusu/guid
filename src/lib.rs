@@ -28,7 +28,7 @@ impl std::str::FromStr for Guid {
         let mut s = s.to_owned();
         s.retain(|c| c.is_ascii_hexdigit());
         if s.len() != std::mem::size_of::<Guid>() * 2 {
-            return Err(ParseGuidError::default());
+            return Err(ParseGuidError { _priv: () });
         }
         // It could not be failed, since we have make sure the len and the asscii_hexdigit
         let integer = u128::from_str_radix(&s, 16).unwrap().to_be_bytes();
@@ -76,32 +76,19 @@ impl Display for ParseGuidErrorKind {
     }
 }
 
+// ParseGuidError should not be constructed by user
 #[derive(Debug)]
 pub struct ParseGuidError {
-    source: ParseGuidErrorKind,
+    _priv: (),
 }
 
 impl Display for ParseGuidError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Error while parsing Guid string: {}", self.source)
-    }
-}
-
-impl Default for ParseGuidError {
-    fn default() -> Self {
-        Self {
-            source: ParseGuidErrorKind::InvalidLenError,
-        }
+        "Error while parsing Guid string".fmt(f)
     }
 }
 
 impl std::error::Error for ParseGuidError {}
-
-impl ParseGuidError {
-    pub fn kind(&self) -> &ParseGuidErrorKind {
-        &self.source
-    }
-}
 
 #[cfg(test)]
 mod test {
@@ -120,12 +107,8 @@ mod test {
         );
         assert_eq!("01020304-0506-0708-090a-0b0d0e0f1011", guid.to_string());
         println!("{}", guid);
-        let guid = " 1020304-0506-0708-090a-0b0d0e0f1011"
+        " 1020304-0506-0708-090a-0b0d0e0f1011"
             .parse::<Guid>()
             .expect_err("It should be error:Invalid length");
-
-        match guid.kind() {
-            ParseGuidErrorKind::InvalidLenError => {}
-        }
     }
 }
