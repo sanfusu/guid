@@ -61,21 +61,6 @@ impl std::fmt::Display for Guid {
     }
 }
 
-#[derive(Debug)]
-pub enum ParseGuidErrorKind {
-    InvalidLenError,
-}
-
-impl Display for ParseGuidErrorKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ParseGuidErrorKind::InvalidLenError => {
-                write!(f, "Invalid Length")
-            }
-        }
-    }
-}
-
 // ParseGuidError should not be constructed by user
 #[derive(Debug)]
 pub struct ParseGuidError {
