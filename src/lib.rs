@@ -21,28 +21,6 @@ pub struct Guid {
     pub data4: [u8; 8],
 }
 
-impl std::convert::TryFrom<String> for Guid {
-    type Error = &'static str;
-
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        let mut value = value.replace(' ', "");
-        value = value.replace('"', "");
-        value.retain(|c| c != '-');
-        if value.len() != std::mem::size_of::<Guid>() * 2 {
-            return Err("Invalid format");
-        }
-        let integer = u128::from_str_radix(&value, 16)
-            .or(Err("Invalid format"))?
-            .to_be_bytes();
-        Ok(Guid {
-            data1: u32::from_be_bytes(integer[GuidLayout::data1()].try_into().unwrap()).to_le(),
-            data2: u16::from_be_bytes(integer[GuidLayout::data2()].try_into().unwrap()).to_le(),
-            data3: u16::from_be_bytes(integer[GuidLayout::data3()].try_into().unwrap()).to_le(),
-            data4: integer[GuidLayout::data4()].try_into().unwrap(),
-        })
-    }
-}
-
 impl std::str::FromStr for Guid {
     type Err = ParseGuidError;
 
@@ -79,6 +57,25 @@ impl std::str::FromStr for Guid {
                 .try_into()
                 .map_err(ParseGuidError::try_from_slice_err)?,
         })
+    }
+}
+impl std::fmt::Display for Guid {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{:08x}-{:04x}-{:04x}-{:02x}{:02x}-{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}",
+            self.data1,
+            self.data2,
+            self.data3,
+            self.data4[0],
+            self.data4[1],
+            self.data4[2],
+            self.data4[3],
+            self.data4[4],
+            self.data4[5],
+            self.data4[6],
+            self.data4[7],
+        )
     }
 }
 
@@ -165,6 +162,8 @@ mod test {
                 data4: [0x09, 0x0a, 0x0b, 0x0d, 0x0e, 0x0f, 0x10, 0x11],
             },
         );
+        assert_eq!("01020304-0506-0708-090a-0b0d0e0f1011", guid.to_string());
+        println!("{}", guid);
         let guid = " 1020304-0506-0708-090a-0b0d0e0f1011"
             .parse::<Guid>()
             .expect_err("It should be error:Invalid length");
